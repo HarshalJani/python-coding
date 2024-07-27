@@ -102,7 +102,51 @@ def fibonacci(n):
 print(fibonacci(9))
 
 
+#Problem 5
+#Reverse a string using recursion
+#Input: "abcd"
+#Ouput: "dcba"
 
+def reverse_string(s):
+    res = ""
+    def recursive_update(inter_state, end_state):
+        nonlocal res
+        nonlocal s
+        if inter_state == end_state:
+            return
+        
+        res += s[inter_state]
+        
+        recursive_update(inter_state-1, end_state)
+    recursive_update(len(s)-1, -1)
+    return res
+    
+print(reverse_string("abcd"))
+
+#Alternative Top down approach but without using a nonlocal or self obj.
+#Rather we use a shared list data structure which is called by reference
+#between separate recursive calls (acts as a shared memory)
+def reverse_string_shared(s):
+    def recursive_func(inter_state, ip_str, res_str_list, end_state):
+        
+        if inter_state == end_state:
+            return
+        
+        res_str_list[0] += ip_str[inter_state]
+        
+        recursive_func(inter_state-1, ip_str, res_str_list, end_state)
+
+    res_str_list = [""]
+    recursive_func(len(s)-1, s, res_str_list,-1)
+    print(res_str_list[0])
+    
+reverse_string_shared("abcd")
+
+#TODO:
+#Jump Game
+#All permutations of a string
+#All substring of a string
+#Subset Sum problem
 
 
 
