@@ -1,0 +1,54 @@
+class HashMap:
+    def __init__(self):
+        self.data = {}
+        self.transactions = []
+
+    def set(self, key, value):
+        if self.transactions:
+            self.transactions[-1].append((key, self.data.get(key)))
+        self.data[key] = value
+
+    def get(self, key):
+        return self.data.get(key, None)
+
+    def delete(self, key):
+        if key in self.data:
+            if self.transactions:
+                self.transactions[-1].append((key, self.data.get(key)))
+            del self.data[key]
+
+    def commit(self):
+        if self.transactions:
+            self.transactions.pop()
+
+    def rollback(self):
+        if not self.transactions:
+            return
+        last_transaction = self.transactions.pop()
+        for key, value in reversed(last_transaction):
+            if value is None:
+                self.data.pop(key, None)
+            else:
+                self.data[key] = value
+
+    def begin(self):
+        self.transactions.append([])
+
+# Example usage
+hashmap = HashMap()
+hashmap.set("a", 10)
+print(hashmap.get("a"))  # Output: 10
+
+hashmap.begin()
+hashmap.set("a", 20)
+print(hashmap.get("a"))  # Output: 20
+
+hashmap.rollback()
+print(hashmap.get("a"))  # Output: 10
+
+hashmap.begin()
+hashmap.set("a", 30)
+print(hashmap.get("a"))  # Output: 30
+
+hashmap.commit()
+print(hashmap.get("a"))  # Output: 30

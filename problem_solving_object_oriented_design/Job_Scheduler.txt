@@ -1,0 +1,47 @@
+import sched
+import time
+import threading
+
+class JobScheduler:
+    def __init__(self):
+        self.scheduler = sched.scheduler(time.time, time.sleep)
+        self.jobs = {}
+
+    def add_job(self, job_id, job_func, delay):
+        """ Schedule a job to run after a delay in seconds. """
+        if job_id in self.jobs:
+            print(f"Job with id {job_id} already exists.")
+            return
+        event = self.scheduler.enter(delay, 1, job_func)
+        self.jobs[job_id] = event
+        print(f"Job {job_id} scheduled to run in {delay} seconds.")
+
+    def remove_job(self, job_id):
+        """ Remove a scheduled job. """
+        if job_id in self.jobs:
+            event = self.jobs.pop(job_id)
+            self.scheduler.cancel(event)
+            print(f"Job {job_id} has been canceled.")
+        else:
+            print(f"No job found with id {job_id}.")
+
+    def run(self):
+        """ Run the scheduler. This should be called in a separate thread. """
+        print("Scheduler started.")
+        self.scheduler.run()
+
+# Example usage:
+def job_func():
+    print("Job executed.")
+
+job_scheduler = JobScheduler()
+job_scheduler.add_job("job1", job_func, 5)  # Job will execute after 5 seconds
+job_scheduler.add_job("job2", job_func, 10)  # Job will execute after 10 seconds
+
+# Run the scheduler in a separate thread
+scheduler_thread = threading.Thread(target=job_scheduler.run)
+scheduler_thread.start()
+
+# Wait for a while and then cancel the second job
+time.sleep(6)
+job_scheduler.remove_job("job2")

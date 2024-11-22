@@ -1,0 +1,57 @@
+class BidirectionalGraph:
+    def __init__(self):
+        # Dictionary to store the graph adjacency list
+        # Each node has a set of connected nodes for bidirectional relationship
+        self.graph = {}
+
+    def add_node(self, node):
+        # Add a node if it doesn't already exist
+        if node not in self.graph:
+            self.graph[node] = set()
+
+    def add_edge(self, node1, node2):
+        # Add a bidirectional edge between node1 and node2
+        self.add_node(node1)
+        self.add_node(node2)
+        self.graph[node1].add(node2)
+        self.graph[node2].add(node1)
+
+    def add_user_post(self, user, post):
+        self.add_edge(user, post)
+
+    def add_user_comment(self, user, comment):
+        self.add_edge(user, comment)
+
+    def add_post_comment(self, post, comment):
+        self.add_edge(post, comment)
+
+    def add_comment_reply(self, comment1, comment2):
+        self.add_edge(comment1, comment2)
+
+    def display_graph(self):
+        for node, connections in self.graph.items():
+            print(f"{node}: {connections}")
+
+# Example Usage
+graph = BidirectionalGraph()
+
+# Adding users
+graph.add_node("User1")
+graph.add_node("User2")
+
+# Adding posts
+graph.add_node("Post1")
+graph.add_user_post("User1", "Post1")
+
+# Adding comments
+graph.add_node("Comment1")
+graph.add_user_comment("User2", "Comment1")
+graph.add_post_comment("Post1", "Comment1")
+
+# Adding replies to comments
+graph.add_node("Comment2")
+graph.add_user_comment("User1", "Comment2")
+graph.add_comment_reply("Comment1", "Comment2")
+
+# Display the graph
+graph.display_graph()

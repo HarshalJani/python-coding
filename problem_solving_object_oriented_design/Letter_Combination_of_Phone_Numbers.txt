@@ -1,0 +1,41 @@
+
+def letterCombinations(self, digits: str) -> List[str]:
+        '''
+        The intution is to use backtracking i.e., recursion on the backtracking function 
+        where we loop the characters for a given number and add to our result string
+        '''        
+        digits_to_letters = {
+            "2": "abc",
+            "3": "def",
+            "4": "ghi",
+            "5": "jkl",
+            "6": "mno",
+            "7": "pqrs",
+            "8": "tuv",
+            "9": "wxyz"
+        }
+
+        result = []
+
+        def backtracking(indx, current_string):
+            
+            #Base Case for our Recursion
+            #The idea is that if our combination string completes the combination for each
+            #digit present in the input string that means we have made one successful combination
+            #of letters for the given digits
+
+            if len(current_string) == len(digits):
+                result.append(current_string)
+                return
+
+
+            for char in digits_to_letters[digits[indx]]:
+                #For our current character of our current digit's character string
+                #We want to make combination for the next digits character from its string
+                backtracking(indx + 1, current_string + char)
+
+        #Making the initial call to our recursive function
+        if digits:
+            backtracking(0, "") #We pass 0th index value for i and "" as our current_string
+        
+        return result

@@ -1,0 +1,27 @@
+'''
+Given a string, you can create another string by switching the index of characters and swapping the frequencies. 
+Check if two strings are identical. So "aab" = "bab" true
+'''
+
+def is_idenctical(s1,s2):
+    count_s1 = {}
+    count_s2 = {}
+    
+    for char1,char2 in zip(s1,s2):
+    	count_s1[char1] = 1 + count_s1.get(char1,0)
+    	count_s2[char2] = 1 + count_s2.get(char2,0)
+    
+    freq1 = {}
+    freq2 = {}
+    
+    for f1,f2 in zip(count_s1.values(),count_s2.values()):
+    	freq1[f1] = 1 + freq1.get(f1,0)
+    	freq1[f2] = 1 + freq1.get(f2,0)
+    
+    if f1 == f2:
+    	return True
+    return False
+
+s1 = "aab"
+s2 = "aba"
+print(is_idenctical(s1,s2))

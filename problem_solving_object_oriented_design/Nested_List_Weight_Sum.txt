@@ -1,0 +1,17 @@
+	q = deque()
+        for element in nestedList:
+            q.append([element, 1])
+        
+        res = 0
+        while q:
+            qlen = len(q)
+
+            for _ in range(qlen):
+                cur_element, depth = q.popleft()
+                
+                if cur_element.isInteger():
+                    res += cur_element.getInteger() * depth
+                else:
+                    for list_element in cur_element.getList():
+                        q.append([list_element, depth + 1])
+        return res

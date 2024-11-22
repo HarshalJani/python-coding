@@ -1,0 +1,136 @@
+class Comment:
+    def __init__(self, id, parent):
+        self.id = id
+        self.parent = parent
+
+class CommentNode:
+    def __init__(self, comment: Comment, parent: Optional['CommentNode'] = None, children: Optional[List['CommentNode']] = None):
+        self.comment = comment
+        self.parent = parent
+        self.children = children if children is not None else []
+        
+
+def flat_to_tree(list_of_comments: List[Comment]) -> List[CommentNode]:
+    #from the input list of nodes make a tree structure
+    # the return value is a list of CommentNodes which would be parent nodes that are made out of the input list into a tree structure
+    
+def print_tree(nodes: List[CommentNode]):
+    #write logic to print tree in below format
+
+#1
+#   4
+#       8
+#   5
+#      6
+#         7
+#2
+#3
+
+
+list_of_tree_node = flat_to_tree([
+            			Commnet(1,None),
+		                Commnet(2,None),
+		                Commnet(3,None),
+                                Commnet(4,1),
+                                Commnet(5,1),
+                                Commnet(6,5),
+                                Commnet(7,6),
+                                Commnet(8,4)])
+
+print_tree(list_of_tree_node)
+
+
+# Question Ends Here!
+
+###################################################################################################
+
+SOLUTION IS BELOW
+
+To implement the `flat_to_tree` function, we can start by building a dictionary that maps each comment's ID to its corresponding `CommentNode`. Then, we link each comment to its parent by updating the `children` lists. The `print_tree` function will traverse the tree and print each node with proper indentation to reflect the hierarchical structure.
+
+Here’s the complete code:
+
+```python
+from typing import List, Optional, Dict
+
+class Comment:
+    def __init__(self, id, parent):
+        self.id = id
+        self.parent = parent
+
+
+class CommentNode:
+    def __init__(self, comment: Comment, parent: Optional['CommentNode'] = None, children: Optional[List['CommentNode']] = None):
+        self.comment = comment
+        self.parent = parent
+        self.children = children if children is not None else []
+
+
+def flat_to_tree(list_of_comments: List[Comment]) -> List[CommentNode]:
+    # Dictionary to map comment id to CommentNode
+    id_to_node = {comment.id: CommentNode(comment) for comment in list_of_comments}
+    
+    # List to store root nodes
+    roots = []
+
+    for comment in list_of_comments:
+        node = id_to_node[comment.id]
+        
+        # If comment has a parent, attach it as a child of the parent node
+        if comment.parent is not None:
+            parent_node = id_to_node[comment.parent]
+            parent_node.children.append(node)
+            node.parent = parent_node
+        else:
+            # If it has no parent, it's a root node
+            roots.append(node)
+
+    return roots
+
+
+def print_tree(nodes: List[CommentNode], level: int = 0):
+    for node in nodes:
+        # Print the current comment with indentation
+        print("    " * level + str(node.comment.id))
+        # Recursively print the children with increased indentation
+        print_tree(node.children, level + 1)
+
+
+# Example usage
+list_of_tree_nodes = flat_to_tree([
+    Comment(1, None),
+    Comment(2, None),
+    Comment(3, None),
+    Comment(4, 1),
+    Comment(5, 1),
+    Comment(6, 5),
+    Comment(7, 6),
+    Comment(8, 4)
+])
+
+print_tree(list_of_tree_nodes)
+```
+
+### Explanation:
+
+- **`flat_to_tree`**:
+  - Creates a `CommentNode` for each `Comment` and stores it in `id_to_node` for easy lookup.
+  - If a comment has a parent, it links the node to its parent’s `children` list.
+  - If a comment has no parent, it’s considered a root node and added to the `roots` list.
+
+- **`print_tree`**:
+  - Recursively prints each node, adjusting indentation based on the level of nesting.
+
+### Expected Output:
+```
+1
+    4
+        8
+    5
+        6
+            7
+2
+3
+```
+
+This output aligns with the given hierarchy.

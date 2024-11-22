@@ -1,0 +1,38 @@
+from collections import defaultdict, Counter
+import heapq
+
+class RecommendationEngine:
+    def __init__(self):
+        self.data = defaultdict(list)  # Stores posts/comments by keywords
+        self.index = {}  # Stores the original post/comment text by ID
+    
+    def add_post(self, post_id, content, keywords):
+        self.index[post_id] = content
+        for keyword in keywords:
+            self.data[keyword].append(post_id)
+    
+    def get_recommendations(self, keywords, top_n=5):
+        counter = Counter()
+        for keyword in keywords:
+            if keyword in self.data:
+                counter.update(self.data[keyword])
+        
+        # Get top_n most common post IDs
+        recommendations = heapq.nlargest(top_n, counter.items(), key=lambda x: x[1])
+        
+        return [self.index[post_id] for post_id, _ in recommendations]
+    
+    # def __repr__(self):
+    #     return f"Data: {dict(self.data)}\nIndex: {self.index}"
+
+# Example usage:
+engine = RecommendationEngine()
+engine.add_post(1, "Love Python programming", ["programming", "python"])
+engine.add_post(2, "Python is great for AI", ["python", "AI"])
+engine.add_post(3, "AI is the future", ["AI", "future"])
+engine.add_post(4, "Reading about AI and programming", ["AI", "programming"])
+
+recommendations = engine.get_recommendations(["python", "AI"])
+print("Recommendations:")
+for rec in recommendations:
+    print(rec)
